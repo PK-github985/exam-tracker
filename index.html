@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JEE Main 2025 Syllabus</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f4f4f4;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #007BFF;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
+        .subject-card {
+            background: white;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .subject-header {
+            background: #007BFF;
+            color: white;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+        }
+        .subject-content {
+            padding: 15px;
+            display: none;
+        }
+        .chapter {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .chapter:last-child {
+            border-bottom: none;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+        label {
+            font-size: 1rem;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            .subject-header {
+                font-size: 1rem;
+            }
+            label {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>JEE Main 2025 Syllabus</h1>
+    <div class="container" id="syllabus"></div>
+
+    <script>
+        const syllabus = {
+            Mathematics: [
+                "Sets, Relations and Functions", "Complex Numbers and Quadratic Equations", "Matrices and Determinants",
+                "Permutations and Combinations", "Binomial Theorem and Its Simple Applications", "Sequence and Series",
+                "Limit, Continuity, and Differentiability", "Integral Calculus", "Differential Equations",
+                "Coordinate Geometry", "Three-Dimensional Geometry", "Vector Algebra", "Statistics and Probability",
+                "Trigonometry"
+            ],
+            Physics: [
+                "Units and Measurements", "Kinematics", "Laws of Motion", "Work, Energy, and Power", "Rotational Motion",
+                "Gravitation", "Properties of Solids and Liquids", "Thermodynamics", "Kinetic Theory of Gases",
+                "Oscillations and Waves", "Electrostatics", "Current Electricity", "Magnetic Effects of Current and Magnetism",
+                "Electromagnetic Induction and Alternating Currents", "Electromagnetic Waves", "Optics",
+                "Dual Nature of Matter and Radiation", "Atoms and Nuclei", "Electronic Devices", "Experimental Skills"
+            ],
+            Chemistry: {
+                "Physical Chemistry": ["Some Basic Concepts in Chemistry", "Atomic Structure", "Chemical Bonding and Molecular Structure",
+                    "Chemical Thermodynamics", "Solutions", "Equilibrium", "Redox Reactions and Electrochemistry", "Chemical Kinetics"],
+                "Inorganic Chemistry": ["Classification of Elements and Periodicity in Properties", "p-Block Elements (Groups 13 to 18)",
+                    "d- and f-Block Elements", "Coordination Compounds"],
+                "Organic Chemistry": ["Purification and Characterization of Organic Compounds", "Some Basic Principles of Organic Chemistry",
+                    "Hydrocarbons", "Organic Compounds Containing Halogens", "Organic Compounds Containing Oxygen",
+                    "Organic Compounds Containing Nitrogen", "Biomolecules", "Principles Related to Practical Chemistry"]
+            }
+        };
+
+        const syllabusContainer = document.getElementById("syllabus");
+        const savedProgress = JSON.parse(localStorage.getItem("jee_syllabus")) || {};
+
+        function createCheckbox(subject, chapter) {
+            const div = document.createElement("div");
+            div.classList.add("chapter");
+            const checkbox = document.createElement("input");
+            checkbox.type = "checkbox";
+            checkbox.checked = savedProgress[subject]?.includes(chapter) || false;
+            checkbox.addEventListener("change", () => saveProgress(subject, chapter, checkbox.checked));
+            const label = document.createElement("label");
+            label.textContent = chapter;
+            div.appendChild(checkbox);
+            div.appendChild(label);
+            return div;
+        }
+
+        function saveProgress(subject, chapter, isChecked) {
+            if (!savedProgress[subject]) {
+                savedProgress[subject] = [];
+            }
+            if (isChecked) {
+                if (!savedProgress[subject].includes(chapter)) {
+                    savedProgress[subject].push(chapter);
+                }
+            } else {
+                savedProgress[subject] = savedProgress[subject].filter(ch => ch !== chapter);
+            }
+            localStorage.setItem("jee_syllabus", JSON.stringify(savedProgress));
+        }
+
+        for (const subject in syllabus) {
+            const card = document.createElement("div");
+            card.classList.add("subject-card");
+
+            const header = document.createElement("div");
+            header.classList.add("subject-header");
+            header.textContent = subject;
+            header.addEventListener("click", () => {
+                content.style.display = content.style.display === "none" ? "block" : "none";
+            });
+
+            const content = document.createElement("div");
+            content.classList.add("subject-content");
+
+            if (Array.isArray(syllabus[subject])) {
+                syllabus[subject].forEach(chapter => {
+                    content.appendChild(createCheckbox(subject, chapter));
+                });
+            } else {
+                for (const category in syllabus[subject]) {
+                    const categoryTitle = document.createElement("h3");
+                    categoryTitle.textContent = category;
+                    categoryTitle.style.color = "#28a745";
+                    content.appendChild(categoryTitle);
+                    syllabus[subject][category].forEach(chapter => {
+                        content.appendChild(createCheckbox(subject, chapter));
+                    });
+                }
+            }
+
+            card.appendChild(header);
+            card.appendChild(content);
+            syllabusContainer.appendChild(card);
+        }
+    </script>
+</body>
+</html>
