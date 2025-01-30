@@ -3,39 +3,95 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JEE Main 2025 Syllabus</title>
+    <title>JEE Main 2025 Syllabus Tracker</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        :root {
+            --primary: #007BFF;
+            --background: #ffffff;
+            --text: #333333;
+            --card-bg: #f8f9fa;
+        }
+        [data-theme="dark"] {
+            --background: #1a1a1a;
+            --text: #ffffff;
+            --card-bg: #2d2d2d;
+        }
         body {
             font-family: 'Poppins', sans-serif;
             margin: 0;
             padding: 20px;
-            background: #f4f4f4;
-            color: #333;
+            background: var(--background);
+            color: var(--text);
+            transition: all 0.3s ease;
         }
         h1 {
             text-align: center;
-            color: #007BFF;
+            color: var(--primary);
+            margin: 40px 0 30px 0;
         }
-        .container {
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        .progress-container {
             max-width: 600px;
-            margin: auto;
+            margin: 0 auto 30px auto;
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 15px;
         }
-        .subject-card {
-            background: white;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        .progress-bar {
+            height: 10px;
+            background: #e9ecef;
+            border-radius: 5px;
             overflow: hidden;
         }
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.5s ease;
+        }
+        .progress-text {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: 500;
+            color: var(--text);
+        }
+        .subject-card {
+            max-width: 600px;
+            margin: 0 auto 20px auto;
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+        }
         .subject-header {
-            background: #007BFF;
-            color: white;
-            padding: 15px;
+            padding: 18px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0,123,255,0.05);
+        }
+        .subject-title {
             font-size: 1.2rem;
             font-weight: 600;
-            cursor: pointer;
-            text-align: center;
+            color: var(--primary);
+        }
+        .chapter-count {
+            color: var(--text);
+            opacity: 0.8;
+            font-size: 0.9rem;
         }
         .subject-content {
             padding: 15px;
@@ -44,128 +100,186 @@
         .chapter {
             display: flex;
             align-items: center;
-            padding: 10px;
-            border-bottom: 1px solid #ddd;
-        }
-        .chapter:last-child {
-            border-bottom: none;
+            padding: 12px;
+            margin: 8px 0;
+            background: rgba(0,123,255,0.03);
+            border-radius: 8px;
         }
         input[type="checkbox"] {
-            margin-right: 10px;
-            transform: scale(1.2);
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
         }
-        label {
-            font-size: 1rem;
+        .chapter label {
+            flex: 1;
+            cursor: pointer;
+            transition: color 0.2s ease;
         }
-        @media (max-width: 600px) {
-            .container {
-                padding: 10px;
-            }
-            .subject-header {
-                font-size: 1rem;
-            }
-            label {
-                font-size: 0.9rem;
-            }
+        input:checked + label {
+            color: var(--primary);
+            opacity: 0.7;
         }
     </style>
 </head>
 <body>
-    <h1>JEE Main 2025 Syllabus</h1>
-    <div class="container" id="syllabus"></div>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+    <h1>JEE Main 2025 Syllabus Tracker</h1>
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="overall-progress" style="width: 0%"></div>
+        </div>
+        <div class="progress-text" id="progress-text">0% Complete</div>
+    </div>
+    <div id="syllabus"></div>
 
     <script>
         const syllabus = {
             Mathematics: [
-                "Sets, Relations and Functions", "Complex Numbers and Quadratic Equations", "Matrices and Determinants",
-                "Permutations and Combinations", "Binomial Theorem and Its Simple Applications", "Sequence and Series",
-                "Limit, Continuity, and Differentiability", "Integral Calculus", "Differential Equations",
-                "Coordinate Geometry", "Three-Dimensional Geometry", "Vector Algebra", "Statistics and Probability",
-                "Trigonometry"
+                "Sets, Relations and Functions", "Complex Numbers and Quadratic Equations", 
+                "Matrices and Determinants", "Permutations and Combinations", 
+                "Binomial Theorem and Its Simple Applications", "Sequence and Series",
+                "Limit, Continuity, and Differentiability", "Integral Calculus", 
+                "Differential Equations", "Coordinate Geometry", 
+                "Three-Dimensional Geometry", "Vector Algebra", 
+                "Statistics and Probability", "Trigonometry"
             ],
             Physics: [
-                "Units and Measurements", "Kinematics", "Laws of Motion", "Work, Energy, and Power", "Rotational Motion",
-                "Gravitation", "Properties of Solids and Liquids", "Thermodynamics", "Kinetic Theory of Gases",
-                "Oscillations and Waves", "Electrostatics", "Current Electricity", "Magnetic Effects of Current and Magnetism",
-                "Electromagnetic Induction and Alternating Currents", "Electromagnetic Waves", "Optics",
-                "Dual Nature of Matter and Radiation", "Atoms and Nuclei", "Electronic Devices", "Experimental Skills"
+                "Units and Measurements", "Kinematics", "Laws of Motion", 
+                "Work, Energy, and Power", "Rotational Motion", "Gravitation", 
+                "Properties of Solids and Liquids", "Thermodynamics", 
+                "Kinetic Theory of Gases", "Oscillations and Waves", 
+                "Electrostatics", "Current Electricity", 
+                "Magnetic Effects of Current and Magnetism",
+                "Electromagnetic Induction and Alternating Currents", 
+                "Electromagnetic Waves", "Optics", "Dual Nature of Matter and Radiation", 
+                "Atoms and Nuclei", "Electronic Devices", "Experimental Skills"
             ],
             Chemistry: {
-                "Physical Chemistry": ["Some Basic Concepts in Chemistry", "Atomic Structure", "Chemical Bonding and Molecular Structure",
-                    "Chemical Thermodynamics", "Solutions", "Equilibrium", "Redox Reactions and Electrochemistry", "Chemical Kinetics"],
-                "Inorganic Chemistry": ["Classification of Elements and Periodicity in Properties", "p-Block Elements (Groups 13 to 18)",
-                    "d- and f-Block Elements", "Coordination Compounds"],
-                "Organic Chemistry": ["Purification and Characterization of Organic Compounds", "Some Basic Principles of Organic Chemistry",
-                    "Hydrocarbons", "Organic Compounds Containing Halogens", "Organic Compounds Containing Oxygen",
-                    "Organic Compounds Containing Nitrogen", "Biomolecules", "Principles Related to Practical Chemistry"]
+                "Physical Chemistry": [
+                    "Some Basic Concepts in Chemistry", "Atomic Structure", 
+                    "Chemical Bonding and Molecular Structure", "Chemical Thermodynamics", 
+                    "Solutions", "Equilibrium", "Redox Reactions and Electrochemistry", 
+                    "Chemical Kinetics"
+                ],
+                "Inorganic Chemistry": [
+                    "Classification of Elements and Periodicity in Properties", 
+                    "p-Block Elements (Groups 13 to 18)", "d- and f-Block Elements", 
+                    "Coordination Compounds"
+                ],
+                "Organic Chemistry": [
+                    "Purification and Characterization of Organic Compounds", 
+                    "Some Basic Principles of Organic Chemistry", "Hydrocarbons", 
+                    "Organic Compounds Containing Halogens", 
+                    "Organic Compounds Containing Oxygen", 
+                    "Organic Compounds Containing Nitrogen", "Biomolecules", 
+                    "Principles Related to Practical Chemistry"
+                ]
             }
         };
 
         const syllabusContainer = document.getElementById("syllabus");
-        const savedProgress = JSON.parse(localStorage.getItem("jee_syllabus")) || {};
+        let savedProgress = JSON.parse(localStorage.getItem("jee_syllabus")) || {};
 
-        function createCheckbox(subject, chapter) {
-            const div = document.createElement("div");
-            div.classList.add("chapter");
-            const checkbox = document.createElement("input");
-            checkbox.type = "checkbox";
-            checkbox.checked = savedProgress[subject]?.includes(chapter) || false;
-            checkbox.addEventListener("change", () => saveProgress(subject, chapter, checkbox.checked));
-            const label = document.createElement("label");
-            label.textContent = chapter;
-            div.appendChild(checkbox);
-            div.appendChild(label);
-            return div;
+        function init() {
+            renderSyllabus();
+            updateProgress();
         }
 
-        function saveProgress(subject, chapter, isChecked) {
-            if (!savedProgress[subject]) {
-                savedProgress[subject] = [];
+        function renderSyllabus() {
+            syllabusContainer.innerHTML = '';
+            for (const subject in syllabus) {
+                const card = createSubjectCard(subject);
+                syllabusContainer.appendChild(card);
             }
-            if (isChecked) {
-                if (!savedProgress[subject].includes(chapter)) {
-                    savedProgress[subject].push(chapter);
-                }
-            } else {
-                savedProgress[subject] = savedProgress[subject].filter(ch => ch !== chapter);
-            }
-            localStorage.setItem("jee_syllabus", JSON.stringify(savedProgress));
         }
 
-        for (const subject in syllabus) {
-            const card = document.createElement("div");
-            card.classList.add("subject-card");
+        function createSubjectCard(subject) {
+            const card = document.createElement('div');
+            card.className = 'subject-card';
+            
+            const header = document.createElement('div');
+            header.className = 'subject-header';
+            header.innerHTML = `
+                <div class="subject-title">${subject}</div>
+                <div class="chapter-count">${getChapterCount(subject)} chapters</div>
+            `;
+            
+            const content = document.createElement('div');
+            content.className = 'subject-content';
+            content.innerHTML = getChaptersHTML(subject);
 
-            const header = document.createElement("div");
-            header.classList.add("subject-header");
-            header.textContent = subject;
-            header.addEventListener("click", () => {
-                content.style.display = content.style.display === "none" ? "block" : "none";
-            });
-
-            const content = document.createElement("div");
-            content.classList.add("subject-content");
-
-            if (Array.isArray(syllabus[subject])) {
-                syllabus[subject].forEach(chapter => {
-                    content.appendChild(createCheckbox(subject, chapter));
-                });
-            } else {
-                for (const category in syllabus[subject]) {
-                    const categoryTitle = document.createElement("h3");
-                    categoryTitle.textContent = category;
-                    categoryTitle.style.color = "#28a745";
-                    content.appendChild(categoryTitle);
-                    syllabus[subject][category].forEach(chapter => {
-                        content.appendChild(createCheckbox(subject, chapter));
-                    });
-                }
-            }
-
+            header.addEventListener('click', () => toggleContent(content));
             card.appendChild(header);
             card.appendChild(content);
-            syllabusContainer.appendChild(card);
+            return card;
         }
+
+        function toggleContent(content) {
+            content.style.display = content.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function getChaptersHTML(subject) {
+            const chapters = syllabus[subject];
+            if (Array.isArray(chapters)) {
+                return chapters.map(chapter => createChapterHTML(subject, chapter)).join('');
+            }
+            return Object.entries(chapters).map(([category, items]) => `
+                <h3 style="color: var(--primary); margin: 12px 0 8px 0; font-size: 1rem;">${category}</h3>
+                ${items.map(item => createChapterHTML(subject, item)).join('')}
+            `).join('');
+        }
+
+        function createChapterHTML(subject, chapter) {
+            const isChecked = savedProgress[subject]?.includes(chapter) || false;
+            return `
+                <div class="chapter">
+                    <input type="checkbox" ${isChecked ? 'checked' : ''} 
+                           onchange="toggleChapter('${subject}', '${chapter}', this.checked)">
+                    <label>${chapter}</label>
+                </div>
+            `;
+        }
+
+        function toggleChapter(subject, chapter, isChecked) {
+            if (!savedProgress[subject]) savedProgress[subject] = [];
+            const index = savedProgress[subject].indexOf(chapter);
+            
+            if (isChecked && index === -1) {
+                savedProgress[subject].push(chapter);
+            } else if (!isChecked && index > -1) {
+                savedProgress[subject].splice(index, 1);
+            }
+            
+            localStorage.setItem("jee_syllabus", JSON.stringify(savedProgress));
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const totalChapters = Object.values(syllabus).reduce((acc, subject) => 
+                acc + (Array.isArray(subject) ? subject.length : 
+                Object.values(subject).flat().length), 0);
+            
+            const completed = Object.values(savedProgress).flat().length;
+            const percentage = Math.round((completed / totalChapters) * 100);
+            
+            document.getElementById('overall-progress').style.width = `${percentage}%`;
+            document.getElementById('progress-text').textContent = 
+                `${percentage}% Complete (${completed}/${totalChapters} chapters)`;
+        }
+
+        function toggleTheme() {
+            document.body.setAttribute('data-theme', 
+                document.body.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+        }
+
+        function getChapterCount(subject) {
+            const chapters = syllabus[subject];
+            return Array.isArray(chapters) ? chapters.length : 
+                Object.values(chapters).reduce((acc, val) => acc + val.length, 0);
+        }
+
+        init();
     </script>
 </body>
 </html>
